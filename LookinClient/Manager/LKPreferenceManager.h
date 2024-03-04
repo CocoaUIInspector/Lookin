@@ -29,11 +29,6 @@ typedef NS_ENUM(NSInteger, LookinDoubleClickBehavior) {
     LookinDoubleClickBehaviorFocus
 };
 
-typedef NS_ENUM(NSInteger, LookinRefreshMode) {
-    LookinRefreshModeAllItems,
-    LookinRefreshModeDisplayingItems
-};
-
 typedef NS_ENUM(NSInteger, LookinPreferredCallStackType) {
     LookinPreferredCallStackTypeDefault,    // 格式化 + 简略
     LookinPreferredCallStackTypeFormattedCompletely, // 格式化 + 完整
@@ -57,8 +52,6 @@ typedef NS_ENUM(NSInteger, LookinMeasureState) {
 @property(nonatomic, assign) LookinPreferredAppeanranceType appearanceType;
 
 @property(nonatomic, assign) LookinDoubleClickBehavior doubleClickBehavior;
-
-@property(nonatomic, assign) LookinRefreshMode refreshMode;
 
 /// 有效值为 0 ～ 4
 @property(nonatomic, assign) NSInteger expansionIndex;
@@ -86,6 +79,8 @@ typedef NS_ENUM(NSInteger, LookinMeasureState) {
 @property(nonatomic, assign) CGFloat preferredExportCompression;
 
 @property(nonatomic, strong, readonly) LookinBOOLMsgAttribute *freeRotation;
+
+@property(nonatomic, strong, readonly) LookinBOOLMsgAttribute *fastMode;
 
 /// 上次接收到 iOS app 里传过来的 color config 和 collapsedClasses 信息的时间，用来统计
 @property(nonatomic, assign) NSTimeInterval receivingConfigTime_Color;

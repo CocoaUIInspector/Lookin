@@ -14,6 +14,7 @@
 #import "LKUserActionManager.h"
 #import "LookinDisplayItem+LookinClient.h"
 #import "LKDanceUIAttrMaker.h"
+#import "LKStaticAsyncUpdateManager.h"
 @import AppCenter;
 @import AppCenterAnalytics;
 
@@ -77,10 +78,6 @@
 
 @property(nonatomic, strong, readwrite) LookinHierarchyInfo *rawHierarchyInfo;
 
-/// 每次刷新 Lookin 后，全新生成的 display items 会被保存在这个属性中，并且不会再被修改（除非下次 reload）
-@property(nonatomic, copy) NSArray<LookinDisplayItem *> *rawFlatItems;
-/// 搜索或聚焦状态下，flatItems 是 rawFlatItems 的子集（normal 状态下，flatItems 和 rawFlatItems 等价）
-@property(nonatomic, copy, readwrite) NSArray<LookinDisplayItem *> *flatItems;
 /// displayingFlatItems 是 flatItems 的子集，仅包含用户可以看到的 items，而那些被折叠的 items 会被剔除。换句话说，当用户展开或收起 item 时，displayingFlatItems 属性会被 buildDisplayingFlatItems 方法不断更新
 @property(nonatomic, copy, readwrite) NSArray<LookinDisplayItem *> *displayingFlatItems;
 
@@ -108,6 +105,7 @@
         _itemDidChangeAttrGroup = [RACSubject subject];
         _itemDidChangeNoPreview = [RACSubject subject];
         _didReloadHierarchyInfo = [RACSubject subject];
+        _willReloadHierarchyInfo = [RACSubject subject];
         _didReloadFlatItemsWithSearchOrFocus = [RACSubject subject];
         
         @weakify(self);
@@ -121,6 +119,8 @@
 
 - (void)reloadWithHierarchyInfo:(LookinHierarchyInfo *)info keepState:(BOOL)keepState {
     self.rawHierarchyInfo = info;
+    
+    [self.willReloadHierarchyInfo sendNext:nil];
 
     if (info.colorAlias.count) {
         [LKPreferenceManager mainManager].receivingConfigTime_Color = [[NSDate date] timeIntervalSince1970];
@@ -551,9 +551,6 @@
     }
     item.isExpanded = NO;
     [self buildDisplayingFlatItems];
-    if ([LKPreferenceManager mainManager].refreshMode == LookinRefreshModeDisplayingItems) {
-        [self reloadWithItems:self.displayingFlatItems forced:NO];
-    }
 }
 
 - (void)expandItem:(LookinDisplayItem *)item {
@@ -565,9 +562,6 @@
     }
     item.isExpanded = YES;
     [self buildDisplayingFlatItems];
-    if ([LKPreferenceManager mainManager].refreshMode == LookinRefreshModeDisplayingItems) {
-        [self reloadWithItems:self.displayingFlatItems forced:NO];
-    }
 }
 
 - (void)expandToShowItem:(LookinDisplayItem *)item {
@@ -578,9 +572,6 @@
     }];
     
     [self buildDisplayingFlatItems];
-    if ([LKPreferenceManager mainManager].refreshMode == LookinRefreshModeDisplayingItems) {
-        [self reloadWithItems:self.displayingFlatItems forced:NO];
-    }
 }
 
 - (void)expandItemsRootedByItem:(LookinDisplayItem *)item {
@@ -599,9 +590,6 @@
     }
     
     [self buildDisplayingFlatItems];
-    if ([LKPreferenceManager mainManager].refreshMode == LookinRefreshModeDisplayingItems) {
-        [self reloadWithItems:self.displayingFlatItems forced:NO];
-    }
 }
 
 - (void)collapseAllChildrenOfItem:(LookinDisplayItem *)item {
@@ -618,12 +606,7 @@
         enumeratedItem.isExpanded = NO;
     }];
     [self buildDisplayingFlatItems];
-    if ([LKPreferenceManager mainManager].refreshMode == LookinRefreshModeDisplayingItems) {
-        [self reloadWithItems:self.displayingFlatItems forced:NO];
-    }
 }
-
-- (void)reloadWithItems:(NSArray<LookinDisplayItem *> *)items forced:(BOOL)forced {}
 
 #pragma mark - Search
 
@@ -687,7 +670,6 @@
         NSAssert(NO, @"");
         return;
     }
-    self.selectedItem = item;
 
     if (self.state == LKHierarchyDataSourceStateNormal) {
         [self.rawFlatItems enumerateObjectsUsingBlock:^(LookinDisplayItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -945,6 +927,10 @@
 
 - (void)dealloc {
     NSLog(@"%@ dealloc", self.class);
+}
+
+- (BOOL)isReadOnly {
+    return YES;
 }
 
 @end
