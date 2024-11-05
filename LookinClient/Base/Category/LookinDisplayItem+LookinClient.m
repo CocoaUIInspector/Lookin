@@ -51,7 +51,7 @@
 }
 
 - (BOOL)representedForSystemClass {
-    return [self.title hasPrefix:@"UI"] || [self.title hasPrefix:@"CA"] || [self.title hasPrefix:@"_"];
+    return [self.title hasPrefix:@"UI"] || [self.title hasPrefix:@"CA"] || [self.title hasPrefix:@"_"] || [self.title hasPrefix:@"NS"];
 }
 
 - (NSImage *)appropriateScreenshot {
