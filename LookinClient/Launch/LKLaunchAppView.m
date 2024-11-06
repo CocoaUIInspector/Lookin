@@ -162,6 +162,8 @@
             self.iconImageView.image = NSImageMake(@"icon_simulator_big");
         } else if (app.appInfo.deviceType == LookinAppInfoDeviceIPad) {
             self.iconImageView.image = NSImageMake(@"icon_ipad_big");
+        } else if (app.appInfo.deviceType == LookinAppInfoDeviceMac) {
+            self.iconImageView.image = NSImageMake(@"icon_mac_big");
         } else {
             self.iconImageView.image = NSImageMake(@"icon_iphone_big");
         }
