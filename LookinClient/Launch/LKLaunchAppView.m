@@ -168,7 +168,7 @@
             self.iconImageView.image = NSImageMake(@"icon_iphone_big");
         }
         self.titleLabel.stringValue = app.appInfo.deviceDescription;
-        self.subtitleLabel.stringValue = [NSString stringWithFormat:@"iOS %@", app.appInfo.osDescription];
+        self.subtitleLabel.stringValue = [NSString stringWithFormat:@"%@", app.appInfo.osDescription];
     }
     
     [self updateLayer];
