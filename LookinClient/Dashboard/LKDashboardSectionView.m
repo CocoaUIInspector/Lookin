@@ -253,6 +253,9 @@
         case LookinAttrTypeFloat:
         case LookinAttrTypeDouble:
         case LookinAttrTypeLong:
+        case LookinAttrTypeUnsignedLong:
+        case LookinAttrTypeInt:
+        case LookinAttrTypeUnsignedInt:
             return [LKDashboardAttributeNumberInputView class];
         case LookinAttrTypeUIColor:
             return [LKDashboardAttributeColorView class];
