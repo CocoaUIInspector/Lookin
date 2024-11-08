@@ -228,10 +228,12 @@
             MakeItem(@"NSControlStateValueOn", 1),
             MakeItem(@"NSControlStateValueMixed", -1),
         ];
+        
         mData[@"NSControlSize"] = @[
             MakeItem(@"NSControlSizeRegular", 0),
             MakeItem(@"NSControlSizeSmall", 1),
             MakeItem(@"NSControlSizeMini", 2),
+            MakeItem(@"NSControlSizeLarge", 3),
         ];
         mData[@"NSEventModifierFlags"] = @[
             MakeItem(@"NSEventModifierFlagCapsLock", 1 << 16),

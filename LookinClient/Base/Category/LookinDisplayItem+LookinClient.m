@@ -82,6 +82,25 @@
     return [LKHelper validateFrame:self.frame];
 }
 
+//- (CGRect)calculateFrameToRoot {
+//    if (self.customInfo) {
+//        return [self.customInfo.frameInWindow rectValue];
+//    }
+//    if (!self.superItem) {
+//        return self.frame;
+//    }
+//    CGRect superFrameToRoot = [self.superItem calculateFrameToRoot];
+//    CGRect superBounds = self.superItem.bounds;
+//    CGRect selfFrame = self.frame;
+//    
+//    CGFloat x = selfFrame.origin.x - superBounds.origin.x + superFrameToRoot.origin.x;
+//    CGFloat y = selfFrame.origin.y - superBounds.origin.y + superFrameToRoot.origin.y;
+//    
+//    CGFloat width = selfFrame.size.width;
+//    CGFloat height = selfFrame.size.height;
+//    return CGRectMake(x, y, width, height);
+//}
+
 - (CGRect)calculateFrameToRoot {
     if (self.customInfo) {
         return [self.customInfo.frameInWindow rectValue];
@@ -89,17 +108,40 @@
     if (!self.superItem) {
         return self.frame;
     }
+    
     CGRect superFrameToRoot = [self.superItem calculateFrameToRoot];
     CGRect superBounds = self.superItem.bounds;
     CGRect selfFrame = self.frame;
     
     CGFloat x = selfFrame.origin.x - superBounds.origin.x + superFrameToRoot.origin.x;
-    CGFloat y = selfFrame.origin.y - superBounds.origin.y + superFrameToRoot.origin.y;
+    CGFloat y;
     
+    if (self.superItem.isFlipped) {
+        y = superFrameToRoot.origin.y + (superBounds.size.height - selfFrame.origin.y - selfFrame.size.height);
+    } else {
+        y = selfFrame.origin.y - superBounds.origin.y + superFrameToRoot.origin.y;
+    }
+    /*
+    
+    // 处理当前视图坐标系到父视图坐标系的转换
+    if (self.isFlipped == self.superItem.isFlipped) {
+        // 父子视图坐标系相同
+        
+    } else {
+        // 父子视图坐标系不同
+        if (self.isFlipped) {
+            // 当前视图原点在左上角，父视图原点在左下角
+        } else {
+            // 当前视图原点在左下角，父视图原点在左上角
+            y = superFrameToRoot.origin.y + selfFrame.origin.y;
+        }
+    }
+    */
     CGFloat width = selfFrame.size.width;
     CGFloat height = selfFrame.size.height;
     return CGRectMake(x, y, width, height);
 }
+
 
 - (BOOL)isMatchedWithSearchString:(NSString *)string {
     if (string.length == 0) {

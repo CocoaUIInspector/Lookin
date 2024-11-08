@@ -27,7 +27,7 @@
 @property(nonatomic, strong) SCNNode *maskNode;
 @property(nonatomic, strong) SCNPlane *maskPlane;
 
-@property(nonatomic, assign) BOOL isFlipped;
+@property(nonatomic, assign) BOOL isMacTarget;
 @end
 
 @implementation LKDisplayItemNode
@@ -37,7 +37,7 @@
     
     if (self = [super init]) {
         self.dataSource = dataSource;
-        self.isFlipped = self.dataSource.rawHierarchyInfo.appInfo.deviceType == LookinAppInfoDeviceMac;
+        self.isMacTarget = self.dataSource.rawHierarchyInfo.appInfo.deviceType == LookinAppInfoDeviceMac;
         self.contentPlane = [SCNPlane geometry];
         self.contentPlane.firstMaterial.doubleSided = YES;
         self.contentPlane.firstMaterial.lightingModelName = SCNLightingModelConstant;
@@ -252,13 +252,13 @@
         CGFloat transformedX = 0;
         CGFloat transformedY = 0;
         
-        if (self.isFlipped) {
+        if (self.isMacTarget) {
             transformedX = (originX + width / 2 + xOffSet);
             // Mac的坐标系本身就是 y 轴向上，所以这里不用取反
             transformedY = (originY + height / 2 - yOffSet);
         } else {
             transformedX = (originX + width / 2 + xOffSet) ;
-            // iOS逻辑是 y 轴向下，所以这里要取反
+            // iOS坐标系是 y 轴向下，所以这里要取反
             transformedY = (-(originY + height / 2) + yOffSet);
         }
 
