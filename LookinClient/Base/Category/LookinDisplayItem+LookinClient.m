@@ -20,6 +20,8 @@
         return self.viewObject.lk_simpleDemangledClassName;
     } else if (self.layerObject) {
         return self.layerObject.lk_simpleDemangledClassName;
+    } else if (self.windowObject) {
+        return self.windowObject.lk_simpleDemangledClassName;
     } else {
         return nil;
     }
@@ -35,7 +37,7 @@
         return [NSString stringWithFormat:@"%@.view", text];
     }
     
-    LookinObject *representedObject = self.viewObject ? : self.layerObject;
+    LookinObject *representedObject = self.windowObject ? : self.viewObject ? : self.layerObject;
     if (representedObject.specialTrace.length) {
         return representedObject.specialTrace;
         
@@ -161,6 +163,9 @@
     if ([self.layerObject.memoryAddress containsString:searchString]) {
         return YES;
     }
+    if ([self.windowObject.memoryAddress containsString:searchString]) {
+        return YES;
+    }
     return NO;
 }
 
@@ -206,7 +211,7 @@
     if (!targetClassNames.count) {
         return NO;
     }
-    LookinObject *selfObj = self.viewObject ? : self.layerObject;
+    LookinObject *selfObj = self.windowObject ? : self.viewObject ? : self.layerObject;
     if (!selfObj) {
         return NO;
     }
