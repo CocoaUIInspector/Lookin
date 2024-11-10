@@ -260,7 +260,7 @@
             MakeItem(@"NSScrollerStyleLegacy", 0),
             MakeItem(@"NSScrollerStyleOverlay", 1),
         ];
-        mData[@"NSScrollerKnokStyle"] = @[
+        mData[@"NSScrollerKnobStyle"] = @[
             MakeItem(@"NSScrollerKnobStyleDefault", 0),
             MakeItem(@"NSScrollerKnobStyleDark", 1),
             MakeItem(@"NSScrollerKnobStyleLight", 2),
